@@ -1,0 +1,199 @@
+# This is a sample build configuration for JavaScript.
+# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+#You can specify a custom docker image from Docker Hub as your build environment.
+image: node:12.16.0
+
+pipelines:
+    branches:
+        # run this on every commit to the branch "staging"
+        production:
+            - step:
+                  name: build
+                  deployment: prod
+                  # define which caches to use
+                  caches:
+                      - node # provided by bitbucket to cache node_modules
+                      - nextcache # see definitions section below
+                  script:
+                      # install rsync
+                      - apt-get update && apt-get install zip
+                      # install node modules
+                      - npm install
+                      # build Next.js app
+                      - npx next build
+                      # create deploy directory (to contain .next folder, package.json, node_modules, public)
+                      - mkdir deploy
+                      - cp -a .next ./deploy
+                      - cp package.json ./deploy
+                      #- cp -a node_modules ./deploy
+                      - cp -a public ./deploy
+                      - cp .npmrc ./deploy
+                      - cp jsconfig.json ./deploy
+                      - mkdir ./deploy/.ebextensions
+                      - cp -a ./eb-env/$STAGE/ebextensions/* ./deploy/.ebextensions
+                      - cp -a .platform ./deploy
+                      - cp -a ./eb-env/$STAGE/nginx/* ./deploy/.platform/nginx/conf.d/elasticbeanstalk
+                      - cd ./deploy
+                      - zip -r -D ../application.zip ./
+                  artifacts:
+                      - application.zip
+            - step:
+                  name: Upload new version
+                  caches:
+                      - docker
+                  script:
+                      - pipe: atlassian/aws-elasticbeanstalk-deploy:0.3.0
+                        variables:
+                            ZIP_FILE: 'application.zip'
+                            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                            AWS_DEFAULT_REGION: "us-west-2"
+                            APPLICATION_NAME: "scener-web-next"
+                            COMMAND: 'upload-only'
+                            S3_BUCKET: "scener-eb-deployments"
+                            VERSION_LABEL: 'app-$BITBUCKET_BRANCH-$BITBUCKET_BUILD_NUMBER'
+        beta:
+            - step:
+                  name: build
+                  deployment: beta
+                  # define which caches to use
+                  caches:
+                      - node # provided by bitbucket to cache node_modules
+                      - nextcache # see definitions section below
+                  script:
+                      # install rsync
+                      - apt-get update && apt-get install zip
+                      # install node modules
+                      - npm install
+                      # build Next.js app
+                      - npx next build
+                      # create deploy directory (to contain .next folder, package.json, node_modules, public)
+                      - mkdir deploy
+                      - cp -a .next ./deploy
+                      - cp package.json ./deploy
+                      #- cp -a node_modules ./deploy
+                      - cp -a public ./deploy
+                      - cp .npmrc ./deploy
+                      - cp jsconfig.json ./deploy
+                      - mkdir ./deploy/.ebextensions
+                      - cp -a ./eb-env/$STAGE/ebextensions/* ./deploy/.ebextensions
+                      - cp -a .platform ./deploy
+                      - cp -a ./eb-env/$STAGE/nginx/* ./deploy/.platform/nginx/conf.d/elasticbeanstalk
+                      - cd ./deploy
+                      - zip -r -D ../application.zip ./
+                  artifacts:
+                      - application.zip
+            - step:
+                  name: Deploy to beta
+                  caches:
+                      - docker
+                  script:
+                      - pipe: atlassian/aws-elasticbeanstalk-deploy:0.3.0
+                        variables:
+                            ZIP_FILE: 'application.zip'
+                            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                            AWS_DEFAULT_REGION: "us-west-2"
+                            APPLICATION_NAME: "scener-web-next"
+                            COMMAND: 'upload-only'
+                            S3_BUCKET: "scener-eb-deployments"
+                            VERSION_LABEL: 'app-$BITBUCKET_BRANCH-$BITBUCKET_BUILD_NUMBER'
+
+        design-review:
+            - step:
+                  name: build
+                  deployment: design
+                  # define which caches to use
+                  caches:
+                      - node # provided by bitbucket to cache node_modules
+                      - nextcache # see definitions section below
+                  script:
+                      # install rsync
+                      - apt-get update && apt-get install zip
+                      # install node modules
+                      - npm install
+                      # build Next.js app
+                      - npx next build
+                      # create deploy directory (to contain .next folder, package.json, node_modules, public)
+                      - mkdir deploy
+                      - cp -a .next ./deploy
+                      - cp package.json ./deploy
+                      #- cp -a node_modules ./deploy
+                      - cp -a public ./deploy
+                      - cp .npmrc ./deploy
+                      - cp jsconfig.json ./deploy
+                      - mkdir ./deploy/.ebextensions
+                      - cp -a ./eb-env/$STAGE/ebextensions/* ./deploy/.ebextensions
+                      - cp -a .platform ./deploy
+                      - cp -a ./eb-env/$STAGE/nginx/* ./deploy/.platform/nginx/conf.d/elasticbeanstalk
+                      - cd ./deploy
+                      - zip -r -D  ../application.zip ./
+                  artifacts:
+                      - application.zip
+            - step:
+                  name: Upload new version
+                  caches:
+                      - docker
+                  script:
+                      - pipe: atlassian/aws-elasticbeanstalk-deploy:0.3.0
+                        variables:
+                            ZIP_FILE: 'application.zip'
+                            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                            AWS_DEFAULT_REGION: "us-west-2"
+                            APPLICATION_NAME: "scener-web-next"
+                            S3_BUCKET: "scener-eb-deployments"
+                            ENVIRONMENT_NAME: "scener-web-next-design"
+                            VERSION_LABEL: 'app-$BITBUCKET_BRANCH-$BITBUCKET_BUILD_NUMBER'
+
+        development:
+            - step:
+                  name: build
+                  deployment: test
+                  # define which caches to use
+                  caches:
+                      - node # provided by bitbucket to cache node_modules
+                      - nextcache # see definitions section below
+                  script:
+                      # install rsync
+                      - apt-get update && apt-get install zip
+                      # install node modules
+                      - npm install
+                      # build Next.js app
+                      - npx next build
+                      # create deploy directory (to contain .next folder, package.json, node_modules, public)
+                      - mkdir deploy
+                      - cp -a .next ./deploy
+                      - cp package.json ./deploy
+                      #- cp -a node_modules ./deploy
+                      - cp -a public ./deploy
+                      - cp .npmrc ./deploy
+                      - cp jsconfig.json ./deploy
+                      - mkdir ./deploy/.ebextensions
+                      - cp -a ./eb-env/$STAGE/ebextensions/* ./deploy/.ebextensions
+                      - cp -a .platform ./deploy
+                      - cp -a ./eb-env/$STAGE/nginx/* ./deploy/.platform/nginx/conf.d/elasticbeanstalk
+                      - cd ./deploy
+                      - zip -r -D  ../application.zip ./
+                  artifacts:
+                      - application.zip
+            - step:
+                  name: Upload new version
+                  caches:
+                      - docker
+                  script:
+                      - pipe: atlassian/aws-elasticbeanstalk-deploy:0.3.0
+                        variables:
+                            ZIP_FILE: 'application.zip'
+                            AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                            AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                            AWS_DEFAULT_REGION: "us-west-2"
+                            APPLICATION_NAME: "scener-web-next"
+                            S3_BUCKET: "scener-eb-deployments"
+                            ENVIRONMENT_NAME: "scener-web-next-test"
+                            VERSION_LABEL: 'app-$BITBUCKET_BRANCH-$BITBUCKET_BUILD_NUMBER'
+definitions:
+    caches:
+        nextcache: .next/cache

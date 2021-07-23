@@ -1,0 +1,49 @@
+{
+    "parser": "babel-eslint",
+    "env": {
+        "node": true,
+        "es6": true
+    },
+    "globals": {
+        "fetch": false,
+        "module": false
+    },
+    "extends": ["eslint:recommended", "plugin:node/recommended"],
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "rules": {
+        "require-await": "warn",
+        "no-return-await": "warn",
+        "linebreak-style": ["error", "unix"],
+        "semi": ["error", "always"],
+        "no-console": "off",
+
+        "strict": ["error", "global"],
+        "no-undef": "error",
+        "init-declarations": ["error", "always"],
+        "no-shadow": [
+            "error",
+            {
+                "builtinGlobals": false,
+                "hoist": "functions",
+                "allow": ["resolve", "reject"]
+            }
+        ],
+        "no-var": "warn",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "_$", "varsIgnorePattern": "_$" }],
+        "no-unexpected-multiline": "off",
+        "node/no-missing-require": "warn",
+        "node/exports-style": ["error", "module.exports"],
+        "node/file-extension-in-import": ["error", "always"],
+        "node/prefer-global/buffer": ["error", "always"],
+        "node/prefer-global/console": ["error", "always"],
+        "node/prefer-global/process": ["error", "always"],
+        "node/prefer-global/url-search-params": ["error", "always"],
+        "node/prefer-global/url": ["error", "always"],
+        "node/prefer-promises/dns": "error",
+        "node/prefer-promises/fs": "error",
+        "node/no-unsupported-features/es-syntax": "off"
+    }
+}

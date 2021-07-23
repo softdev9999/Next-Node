@@ -1,0 +1,52 @@
+export default {
+    ENV: "test",
+    EXTENSION_ID: "ppfbhagimikfehandcekfgigoljoidbi",
+    API_URL: "https://test.scener.com/api",
+    SIDEBAR_URL: "https://test.scener.com/live",
+    CONTENT_START_URL: "https://test.scener.com/c/",
+    WEB_HOST: "https://test.scener.com",
+
+    DOMAIN: ".scener.com",
+    VIDEO_APP_ID: "7c7665ea675141ceba800d94542e9281",
+    CHAT_APP_ID: "7c7665ea675141ceba800d94542e9281",
+    SERVICE_URL_PATTERNS: [
+        "*://*.hbonow.com/*",
+        "*://*.hbogo.com/*",
+        "*://*.hbomax.com/*",
+        "*://*.hulu.com/*",
+        "*://*.disneyplus.com/*",
+        "*://*.hotstar.com/*",
+        "*://*.crunchyroll.com/*",
+        "*://*.funimation.com/*",
+        "*://*.youtube.com/*",
+        "*://*.drafthouse.com/*",
+        "*://*.vimeo.com/*",
+        "*://*.amazon.com/*",
+        "*://*.pluto.tv/*",
+        "*://*.showtime.com/*",
+        "*://*.showtimeanytime.com/*",
+        "*://*.amazon.co.uk/*",
+        "*://*.peacocktv.com/*",
+        "*://*.shudder.com/*"
+    ],
+    
+    OFFICIAL_SERVICES: {
+        scener: true,
+        hbo: true,
+        netflix: true,
+        disney: true,
+        hotstar: true,
+        crunchyroll: true,
+        funimation: true,
+        alamo: true,
+        youtube: true,
+        hulu: true,
+        prime: true,
+        vimeo: true,
+        pluto: true,
+        showtime: true,
+        peacock: true,
+        shudder: true
+    },
+    WORDMARK: "/images/scener-logo-wordmark-beta.png"
+};

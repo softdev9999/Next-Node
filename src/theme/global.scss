@@ -1,0 +1,144 @@
+html {
+    // font-size: calc(12px + 1.2vw); /*4vw for relative sizing*/
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: "Overpass", "Roboto", sans-serif;
+    color: #fff;
+    background-color:#09061f;
+}
+
+body {
+    width: 100vw;
+    min-width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    pointer-events: all;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    background: linear-gradient(225deg, #09061f 0%, #1f0150 100%);
+    background-size: cover;
+}
+
+#container {
+    z-index: 1;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 100px;
+    max-width: 100vw;
+    width: 100vw;
+    position: relative;
+    opacity: 1;
+    transition: opacity 200ms;
+}
+
+* {
+    box-sizing: border-box;
+    transition: background-color 0.2s linear;
+}
+
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+a {
+    color: inherit;
+}
+img {
+    max-width: 100%;
+}
+
+.init-loading-container {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    h4 {
+        font-size: 1.5rem;
+        color: #575748;
+        letter-spacing: 0.2em;
+        animation: pulse-50 2s 0s linear infinite;
+    }
+}
+
+.init-loading {
+    fill: #77668b;
+    width: 30vw;
+    animation: bounce 1s linear alternate infinite;
+}
+
+.init-loading .flame {
+    fill: #ff9900;
+    animation: breathe 2s linear alternate infinite;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar {
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-track:window-inactive {
+    background: rgba(255, 255, 255, 0);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    width: 4px;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    height: 4px;
+    border-radius: 10px;
+}
+
+.emoji-picker-react {
+    background-color: #120028 !important;
+    box-shadow: 0 5px 10px #3a006e !important;
+    border: 1px solid #3a006e !important;
+    width: 100% !important;
+    min-height: "5rem";
+}
+
+.emoji-group:before {
+    background: #120028 !important;
+}
+
+.emoji-search {
+    background-color: #3a006e !important;
+    color: white !important;
+    margin-top: 10px !important;
+}
+
+.emoji-categories {
+    display: none !important;
+}
+
+.emoji-picker-react ul.skin-tones-list {
+    top: 22px !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    background-color: transparent;
+    transition: background-color 5000s ease-in-out 0s !important;
+    box-shadow: none !important;
+}

@@ -1,0 +1,11 @@
+PROJECT_DIR=$(git rev-parse --show-toplevel)
+export PATH="$PATH:"/usr/local/bin/ 
+
+echo "WEB CODE"
+WEB=$("$PROJECT_DIR/node_modules/.bin/eslint" "$PROJECT_DIR/src/**/*.js" "$PROJECT_DIR/src/**/*.jsx" -c "$PROJECT_DIR/.eslintrc.json" --ignore-pattern "$PROJECT_DIR/src/pages/api/**" --ignore-pattern "$PROJECT_DIR/src/lib/**")
+echo "SERVER CODE"
+
+SERVER=$("$PROJECT_DIR/node_modules/.bin/eslint" "$PROJECT_DIR/src/pages/api" "$PROJECT_DIR/src/lib" -c "$PROJECT_DIR/.eslintrc.node.json")
+
+echo $WEB
+echo $SERVER

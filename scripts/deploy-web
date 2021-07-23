@@ -1,0 +1,66 @@
+STAGE=$1
+TARGET=$2
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+GIT_ROOT=$(git rev-parse --show-toplevel)
+echo $BRANCH
+echo $STAGE
+echo $GIT_ROOT
+rm -rf .next/
+$GIT_ROOT/scripts/lint || exit 1
+VERSION=$(node $GIT_ROOT/scripts/get-version)
+
+if [[ "$STAGE" == "prod" ]]
+then
+    if [[ "$BRANCH" != "production" ]]
+    then
+        printf  "\a\e[1;31m\nERROR:\nOnly push to prod from production branch \n\nCurrent Branch: $BRANCH\n\n\e[0m"
+        exit 1
+    fi
+    if [[ "$TARGET" == "" ]] || [[ "$TARGET" == "scener-web-next-prod" ]]
+    then
+        printf  "\a\e[1;31m\nERROR:\nOnly push to prod environment from console after creating a new environment clone \n\nCurrent Target: $TARGET\n\n\e[0m"
+        exit 1
+    fi
+fi
+if [[ "$STAGE" == "beta" ]] 
+then
+    if [[ "$BRANCH" != "beta" ]]
+    then
+        printf "\a\e[1;31m\nERROR:\nOnly push to beta from beta branch \n\nCurrent Branch: $BRANCH\n\n\e[0m"
+        exit 1
+    fi
+    TARGET="scener-web-next-beta"
+fi
+if [[ "$STAGE" == "test" ]]
+then
+    if [[ "$BRANCH" != "development" ]]
+    then
+        printf "\a\e[1;31m\nERROR:\nOnly push to test from development branch \n\nCurrent Branch: $BRANCH\n\n\e[0m"
+        exit 1
+    fi
+    TARGET="scener-web-next-test"
+fi
+
+if [[ "$STAGE" == "design" ]]
+then
+    if [[ "$BRANCH" != "design-review" ]]
+    then
+        printf "\a\e[1;31m\nERROR:\nOnly push to design from design-review branch \n\nCurrent Branch: $BRANCH\n\n\e[0m"
+        exit 1
+    fi
+    TARGET="scener-web-next-design"
+fi
+
+if [[ "$STAGE" == "test" ]] && [[ "$TARGET" == "scener-web-next-test" ]]
+then
+    VERSION=$(node $GIT_ROOT/scripts/bump-version)
+    git add --all
+    git commit -m "Deploying to $STAGE: Automatic version bump to $VERSION"
+fi
+cp ./env/$STAGE/.env.$STAGE .env.local
+cp -R ./eb-env/$STAGE/nginx/* ./.platform/nginx/conf.d/elasticbeanstalk
+cp -R ./eb-env/$STAGE/ebextensions/* ./.ebextensions
+./node_modules/.bin/next build || exit 1 
+
+echo $STAGE
+echo $VERSION

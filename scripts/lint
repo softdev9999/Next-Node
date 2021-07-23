@@ -1,0 +1,5 @@
+echo "WEB CODE"
+eslint "./src/config/**/*.js" "./src/theme/**/*.js" "./src/pages/**/*.js" "./src/hooks/**/*.js" "./src/utils/**/*.js" "./src/components/**/*.jsx" -c ./.eslintrc.json --ignore-pattern "./src/pages/api/**/*" --ignore-pattern "./src/lib/**/*"
+echo "SERVER CODE"
+
+eslint ./src/pages/api ./src/lib -c ./.eslintrc.node.json

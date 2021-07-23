@@ -1,0 +1,19 @@
+branch-defaults:
+  production:
+    environment: scener-next-prod
+environment-defaults:
+  scener-next-prod:
+    branch: production
+    repository: null
+global:
+  application_name: scener-next
+  default_ec2_keyname: scener-preprod
+  default_platform: arn:aws:elasticbeanstalk:us-west-2::platform/Node.js 12 running on 64bit Amazon Linux 2/5.0.2
+  default_region: us-west-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: scener-preprod
+  sc: git
+  workspace_type: Application
